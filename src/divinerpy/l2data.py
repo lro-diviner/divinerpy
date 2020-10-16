@@ -10,14 +10,26 @@ DIVINER_URL = URL(
     "https://pds-geosciences.wustl.edu/lro/lro-l-dlre-4-rdr-v1/lrodlr_1001/data"
 )
 
+root = Path("/luna4/maye/l2_data")
 
-class L3Data:
-    GDR_L3_URL = DIVINER_URL / "gdr_l3"
+
+class DataManager:
+    @property
+    def labels(self):
+        return sorted(list(root.glob("*.lbl")))
+
+    @property
+    def images(self):
+        return sorted(list(root.glob("*.jp2")))
+
+
+class L2Data:
+    GDR_L2_URL = DIVINER_URL / "gdr_l2"
 
     def __init__(
         self,
         cycle=None,
-        datatype="ST",
+        datatype="ltim",
         tbol_res=1,
         projection="cylindrical",
         format="jp2",
@@ -72,13 +84,15 @@ class L3Data:
 
         Parameters
         ----------
-        value : {"ra", "rms", "st", "tbol"}
+        value : {"jd", "ltim", "tb3", "tbol"}
             RA = Rock abundance
             RMS = RMS error for RA
             ST = Regolith temperature
             TBOL = Average Bolometric Temperature
         """
-        allowed = "ra rms st tbol".split()
+        allowed = "jd ltim".split()
+        allowed += [f"tb{i}" for i in range(3, 10)]
+        allowed += [f"vb{i}" for i in range(1, 3)]
         if not value.lower() in allowed:
             raise ValueError(f"Only {allowed} allowed.")
         else:
@@ -86,7 +100,8 @@ class L3Data:
 
     @property
     def second_token(self):
-        return "avg" if self.datatype == "tbol" else "clc"
+        # TODO: deal with "err, cnt"
+        return "avg"
 
     @property
     def fname(self):
@@ -103,7 +118,7 @@ class L3Data:
 
     @property
     def folder_url(self):
-        return self.GDR_L3_URL / self.year / self.projection / self.format
+        return self.GDR_L2_URL / self.year / self.projection / self.format
 
     @property
     def data_url(self):
@@ -113,13 +128,19 @@ class L3Data:
     def label_url(self):
         return self.folder_url / self.label
 
-    def download_label(self, subfolder="/luna4/maye/l3_data"):
-        p = Path(subfolder)
+    def download_label(self, subfolder=""):
+        if not subfolder:
+            p = root
+        else:
+            p = Path(subfolder)
         p.mkdir(exist_ok=True)
         url_retrieve(self.label_url, Path(subfolder) / self.label)
 
-    def download_data(self, subfolder="/luna4/maye/l3_data", overwrite=False):
-        p = Path(subfolder)
+    def download_data(self, subfolder="", overwrite=False):
+        if not subfolder:
+            p = root
+        else:
+            p = Path(subfolder)
         p.mkdir(exist_ok=True)
         savepath = p / self.fname
         if savepath.exists() and not overwrite:
