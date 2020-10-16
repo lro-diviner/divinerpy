@@ -3,11 +3,14 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import pathlib
 
-with open("README.rst") as readme_file:
+here = pathlib.Path(__file__).parent.resolve()
+
+with open(here / "README.rst") as readme_file:
     readme = readme_file.read()
 
-with open("HISTORY.rst") as history_file:
+with open(here / "HISTORY.rst") as history_file:
     history = history_file.read()
 
 setup(
@@ -35,7 +38,8 @@ setup(
     include_package_data=True,
     keywords="divinerpy",
     name="divinerpy",
-    packages=find_packages(include=["divinerpy", "divinerpy.*"]),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     test_suite="tests",
     tests_require=["pytest"],
     url="https://github.com/michaelaye/divinerpy",
