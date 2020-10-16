@@ -21,7 +21,6 @@ Tools for working with LRO Diviner data
 
 * Free software: MIT license
 * Documentation: https://divinerpy.readthedocs.io.
-* `PlanetaryPy`_ Affiliate Package.
 
 
 Features
