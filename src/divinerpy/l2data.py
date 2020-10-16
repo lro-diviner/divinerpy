@@ -134,7 +134,7 @@ class L2Data:
         else:
             p = Path(subfolder)
         p.mkdir(exist_ok=True)
-        url_retrieve(self.label_url, Path(subfolder) / self.label)
+        url_retrieve(self.label_url, p / self.label)
 
     def download_data(self, subfolder="", overwrite=False):
         if not subfolder:
@@ -147,4 +147,4 @@ class L2Data:
             print("File exists, use `overwrite=True` to force download.")
             return
         else:
-            url_retrieve(self.data_url, Path(subfolder) / self.fname)
+            url_retrieve(self.data_url, p / self.fname)
