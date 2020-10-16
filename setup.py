@@ -43,6 +43,6 @@ setup(
     test_suite="tests",
     tests_require=["pytest"],
     url="https://github.com/michaelaye/divinerpy",
-    version="0.1.1",
+    version="0.1.2",
     zip_safe=False,
 )
