@@ -30,14 +30,14 @@ class L2Data:
         self,
         cycle=None,
         datatype="ltim",
-        tbol_res=1,
+        map_res=1,  # pix per degrees
         projection="cylindrical",
         format="jp2",
         year=None,
     ):
         self.cycle = cycle
         self.datatype = datatype
-        self.tbol_res = tbol_res
+        self.map_res = map_res
         self.projection = projection
         self.format = format
         self.year = year
@@ -65,12 +65,12 @@ class L2Data:
         self._year = str(value)
 
     @property
-    def tbol_res(self):
-        return self._tbol_res
+    def map_res(self):
+        return self._map_res
 
-    @tbol_res.setter
-    def tbol_res(self, value):
-        self._tbol_res = str(value).zfill(3)
+    @map_res.setter
+    def map_res(self, value):
+        self._map_res = str(value).zfill(3)
 
     @property
     def datatype(self):
@@ -109,7 +109,7 @@ class L2Data:
 
         res = 128
         if self.datatype == "tbol":
-            res = self.tbol_res
+            res = self.map_res
         return f"dgdr_{self.datatype}_{self.second_token}_cyl_{self.cycle}n_{res}_{self.format}.{self.format}"
 
     @property
